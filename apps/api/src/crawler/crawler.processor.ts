@@ -2,6 +2,7 @@ import { Processor, WorkerHost, OnWorkerEvent } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { CRAWL_QUEUE } from './crawler.constants';
 import { ApiClientService } from 'src/api/api-client.service';
+import { PrismaClient } from 'generated/prisma';
 
 @Processor(CRAWL_QUEUE, {
   concurrency: 8, // run up to 8 jobs in parallel
@@ -26,10 +27,38 @@ export class CrawlerProcessor extends WorkerHost {
     const clubs = await this.client.getClubs()
     const whoIsInCount = await this.client.getWhoIsInCount()
 
+    const prisma = new PrismaClient()
+
+    await Promise.all(clubs.map((async club => {
+      await prisma.club.upsert({ 
+        where: { clubId: club.id },
+        update: {},
+        create: {
+          clubId: club.id,
+          name: club.name,
+          description: club.description,
+          longitude: club.longitude,
+          latitude: club.latitude,
+          isHidden: club.isHidden,
+          qrCodeSuffixConfig: club.qrCodeSuffixConfig,
+          timestamp: BigInt(club.timestamp),
+          isDeleted: club.isDeleted,
+          address: {
+            create: {
+              country: club.address?.country || '',
+              city: club.address?.city || '',
+              postalCode: club.address?.postalCode || null,
+              line1: club.address?.line1 || '',
+              line2: club.address?.line2 || null,
+            },
+          },
+        },
+      })
+    })));
 
     
-    console.log(JSON.stringify(clubs))
-    console.log(JSON.stringify(whoIsInCount))
+    // console.log(JSON.stringify(clubs))
+    // console.log(JSON.stringify(whoIsInCount))
 
     // TODO: transform + persist (DB, S3, etc.)
     // await this.repo.upsertMany(transform(payload));

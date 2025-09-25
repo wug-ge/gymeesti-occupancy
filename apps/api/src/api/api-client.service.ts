@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ApiAuthService } from './api-auth.service';
+import { Club, Prisma } from 'generated/prisma';
 
 @Injectable()
 export class ApiClientService {
@@ -27,9 +28,9 @@ export class ApiClientService {
     return res;
   }
 
-  async getClubs() {
+  async getClubs(): Promise<Prisma.ClubGetPayload<{include: { address: true }}>[]> {
     const res = await this.fetchAuthenticated(process.env.GYMEESTI_API_BASE + '/Clubs/Clubs');
-    return await res.json()
+    return (await res.json()).data
   }
 
   async getWhoIsInCount() {

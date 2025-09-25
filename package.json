@@ -1,0 +1,15 @@
+{
+  "name": "gymeesti-occupancy",
+  "version": "0.0.1",
+  "description": "Gathers data from GymEesti API and displays how many users at which time in which gym. Helps you find when and which gym to go to. ",
+  "homepage": "https://github.com/wug-ge/gymeesti-occupancy#readme",
+  "bugs": {
+    "url": "https://github.com/wug-ge/gymeesti-occupancy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wug-ge/gymeesti-occupancy.git"
+  },
+  "license": "MIT",
+  "author": "Daniel Wuggenig"
+}

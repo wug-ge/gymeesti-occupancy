@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: default
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@wug.ge
+      PGADMIN_DEFAULT_PASSWORD: root
+    depends_on:
+      - postgres
+
+  redis:
+    image: redis:8.2
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis/data:/data
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    depends_on:
+      - redis
+  

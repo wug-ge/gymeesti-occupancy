@@ -7,9 +7,9 @@ export class ApiAuthService {
 
   private tokenCacheKey = 'extapi:token';
 
-  async getToken(): Promise<string> {
+  async getToken(forceNew = false): Promise<string> {
     const cached = await this.redis.get(this.tokenCacheKey);
-    if (cached) return cached;
+    if (cached && ! forceNew) return cached;
 
     const res = await fetch(process.env.GYMEESTI_API_BASE + '/Authorize/LoginWithEmail', {
       method: 'POST',

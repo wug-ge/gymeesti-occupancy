@@ -26,6 +26,8 @@ export class CrawlerProcessor extends WorkerHost {
     const clubs = await this.client.getClubs()
     const whoIsInCount = await this.client.getWhoIsInCount()
 
+
+    
     console.log(JSON.stringify(clubs))
     console.log(JSON.stringify(whoIsInCount))
 

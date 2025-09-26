@@ -18,6 +18,7 @@ steps:
   when:
     branch:
       - main
+
 - name: publish_web
   image: plugins/docker
   settings:
@@ -28,7 +29,6 @@ steps:
     password:
       from_secret: docker_password
     dockerfile: 'docker/web/Dockerfile'
-    context: 'web'
   when:
     branch:
       - main

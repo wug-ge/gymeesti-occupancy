@@ -7,8 +7,7 @@ WORKDIR /app
 
 COPY apps/api .
 
-RUN npm ci
-RUN npm run build
+RUN npm ci && npm run build && npx prisma generate
 
 # ---- Runtime stage ----
 FROM ${NODE_IMAGE} AS runner

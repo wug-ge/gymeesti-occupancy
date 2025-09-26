@@ -31,6 +31,8 @@ services:
       - "traefik.http.routers.gymeesti-occupancy-api.entrypoints=websecure"
   gymeesti-occupancy-db:
     image: postgres:17
+    ports:
+      - 127.0.0.1:51234:5432
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

@@ -59,8 +59,14 @@ steps:
       from_secret: POSTGRES_DB
     REDIS_HOST:
       from_secret: REDIS_HOST
-    REDIS_PORT:
-      from_secret: REDIS_PORT
+    GYMEESTI_API_BASE:
+      from_secret: GYMEESTI_API_BASE
+    GYMEESTI_WHITE_LABEL_ID:
+      from_secret: GYMEESTI_WHITE_LABEL_ID
+    GYMEESTI_EMAIL:
+      from_secret: GYMEESTI_EMAIL
+    GYMEESTI_PASSWORD:
+      from_secret: GYMEESTI_PASSWORD
   commands:
   - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
   - docker-compose -f docker-compose.prod.yml down && docker-compose -f docker-compose.prod.yml pull && docker-compose -f docker-compose.prod.yml up -d

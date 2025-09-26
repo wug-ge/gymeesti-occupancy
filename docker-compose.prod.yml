@@ -20,6 +20,8 @@ services:
       - 3001
     environment:
       DATABASE_URL: ${DATABASE_URL}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.gymeesti-occupancy-api.rule=Host(`gymeesti-occupancy.wug.ge`) && PathPrefix(`/api`)"

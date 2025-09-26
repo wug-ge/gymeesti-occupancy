@@ -57,9 +57,14 @@ steps:
       from_secret: POSTGRES_PASSWORD
     POSTGRES_DB:
       from_secret: POSTGRES_DB
+    REDIS_HOST:
+      from_secret: REDIS_HOST
+    REDIS_PORT:
+      from_secret: REDIS_PORT
   commands:
   - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
   - docker-compose -f docker-compose.prod.yml down && docker-compose -f docker-compose.prod.yml pull && docker-compose -f docker-compose.prod.yml up -d
+  - docker-compose -f docker-compose.prod.yml api exec "npx prisma migrate deploy"
   depends_on:
     - publish_api
     - publish_web

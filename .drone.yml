@@ -59,6 +59,8 @@ steps:
       from_secret: POSTGRES_DB
     REDIS_HOST:
       from_secret: REDIS_HOST
+    REDIS_PORT:
+      from_secret: REDIS_PORT
     GYMEESTI_API_BASE:
       from_secret: GYMEESTI_API_BASE
     GYMEESTI_WHITE_LABEL_ID:

@@ -29,11 +29,9 @@ export class CrawlerProcessor extends WorkerHost {
   private async handleFetchGymeestiData(job: Job<{ page?: number }>) {
     // If the target API needs headers/auth, add them here
     const clubs = await this.client.getClubs()
-    console.log(clubs)
     const whoIsInCount = await this.client.getWhoIsInCount()
 
     await Promise.all(clubs.map((async club => {
-      console.log("description:" , club)
       await this.prisma.club.upsert({ 
         where: { clubId: club.id },
         update: {},

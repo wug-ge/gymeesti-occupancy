@@ -1,0 +1,69 @@
+kind: pipeline
+name: default
+
+workspace:
+  path: /data/drone
+
+steps:
+- name: publish_api
+  image: plugins/docker
+  settings:
+    repo: wugge/gymeesti-occupancy-api
+    tags: [ "${DRONE_COMMIT_SHA:0:7}","latest" ]
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    dockerfile: 'docker/api/Dockerfile'
+  when:
+    branch:
+      - main
+- name: publish_web
+  image: plugins/docker
+  settings:
+    repo: wugge/gymeesti-occupancy-web
+    tags: [ "${DRONE_COMMIT_SHA:0:7}","latest" ]
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    dockerfile: 'docker/web/Dockerfile'
+    context: 'web'
+  when:
+    branch:
+      - main
+
+
+- name: deploy
+  image: docker/compose
+  when:
+    branch:
+      - main
+  volumes:
+    - name: docker_sock
+      path: /var/run/docker.sock
+  environment:
+    DOCKER_USERNAME:
+      from_secret: docker_username
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+
+    # DB
+    DATABASE_URL:
+      from_secret: DATABASE_URL
+    POSTGRES_USER:
+      from_secret: POSTGRES_USER
+    POSTGRES_PASSWORD:
+      from_secret: POSTGRES_PASSWORD
+    POSTGRES_DB:
+      from_secret: POSTGRES_DB
+  commands:
+  - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
+  - docker-compose -f docker-compose.prod.yml down && docker-compose -f docker-compose.prod.yml pull && docker-compose -f docker-compose.prod.yml up -d
+  depends_on:
+    - publish_api
+    - publish_web
+volumes:
+  - name: docker_sock
+    host:
+      path: /var/run/docker.sock

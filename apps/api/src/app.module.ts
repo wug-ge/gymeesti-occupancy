@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CrawlerModule } from './crawler/crawler.module';
 import { BullModule } from '@nestjs/bullmq';
 import { ApiModule } from './api/api.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ApiModule } from './api/api.module';
     }),
     CrawlerModule,
     ApiModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

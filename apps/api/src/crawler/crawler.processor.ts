@@ -3,12 +3,16 @@ import { Job } from 'bullmq';
 import { CRAWL_QUEUE } from './crawler.constants';
 import { ApiClientService } from 'src/api/api-client.service';
 import { PrismaClient } from 'generated/prisma';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Processor(CRAWL_QUEUE, {
   concurrency: 8, // run up to 8 jobs in parallel
 })
 export class CrawlerProcessor extends WorkerHost {
-  constructor(private readonly client: ApiClientService) {
+  constructor(
+    private readonly client: ApiClientService,
+    private readonly prisma: PrismaService,
+  ) {
     super()
   }
 
@@ -25,12 +29,12 @@ export class CrawlerProcessor extends WorkerHost {
   private async handleFetchGymeestiData(job: Job<{ page?: number }>) {
     // If the target API needs headers/auth, add them here
     const clubs = await this.client.getClubs()
+    console.log(clubs)
     const whoIsInCount = await this.client.getWhoIsInCount()
 
-    const prisma = new PrismaClient()
-
     await Promise.all(clubs.map((async club => {
-      await prisma.club.upsert({ 
+      console.log("description:" , club)
+      await this.prisma.club.upsert({ 
         where: { clubId: club.id },
         update: {},
         create: {
@@ -41,8 +45,6 @@ export class CrawlerProcessor extends WorkerHost {
           latitude: club.latitude,
           isHidden: club.isHidden,
           qrCodeSuffixConfig: club.qrCodeSuffixConfig,
-          timestamp: BigInt(club.timestamp),
-          isDeleted: club.isDeleted,
           address: {
             create: {
               country: club.address?.country || '',
@@ -56,16 +58,16 @@ export class CrawlerProcessor extends WorkerHost {
       })
     })));
 
-    
-    // console.log(JSON.stringify(clubs))
-    // console.log(JSON.stringify(whoIsInCount))
+    await Promise.all(whoIsInCount.map(async count => {
+      await this.prisma.clubOccupancy.create({
+        data: {
+          clubId: count.clubId,
+          count: count.count,
+        }
+      })
+    }))
 
-    // TODO: transform + persist (DB, S3, etc.)
-    // await this.repo.upsertMany(transform(payload));
-
-    return {
-      clubs
-    };
+    return { clubsFound: clubs.length, whoIsInCountFound: whoIsInCount.length };
   }
 
 

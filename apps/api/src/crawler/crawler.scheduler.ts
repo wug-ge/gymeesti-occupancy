@@ -13,7 +13,7 @@ export class CrawlerScheduler implements OnModuleInit {
       {},
       {
         jobId: 'fetch-gymeesti-data',
-        repeat: { pattern: '* * * * *' }, // crawl every 5 minutes
+        repeat: { pattern: '*/5 * * * *' }, // crawl every 5 minutes
         priority: 2,
       } satisfies JobsOptions,
     );

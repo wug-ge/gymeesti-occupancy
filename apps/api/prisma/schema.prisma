@@ -16,27 +16,48 @@ datasource db {
 
 model Club {
   id                 Int      @id @default(autoincrement())
-  clubId             Int      @unique
+  clubId             Int      @unique        // external ID from API
   name               String
   description        String?
   longitude          Float
   latitude           Float
   isHidden           Boolean  @default(false)
   qrCodeSuffixConfig String
-  timestamp          BigInt
   isDeleted          Boolean  @default(false)
 
+  // audit
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
   address            Address?
+  occupancies        ClubOccupancy[]
 }
 
 model Address {
-  id        Int    @id @default(autoincrement())
-  country   String
-  city      String
+  id         Int      @id @default(autoincrement())
+  country    String
+  city       String
   postalCode String?
-  line1     String
-  line2     String?
+  line1      String
+  line2      String?
 
-  clubId    Int    @unique
-  club      Club   @relation(fields: [clubId], references: [id])
+  clubId     Int      @unique
+  club       Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ClubOccupancy {
+  id         Int      @id @default(autoincrement())
+
+  clubId     Int
+  club       Club     @relation(fields: [clubId], references: [clubId], onDelete: Cascade)
+
+  count      Int
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([clubId, createdAt])
 }

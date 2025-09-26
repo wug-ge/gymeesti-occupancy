@@ -18,4 +18,4 @@ ENV NODE_ENV=production
 COPY --from=builder  /app/               ./
 
 EXPOSE 3001
-CMD ["node", "dist/main.js"]
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && node dist/main.js"]

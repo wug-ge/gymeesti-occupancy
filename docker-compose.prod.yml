@@ -24,8 +24,8 @@ services:
       REDIS_PORT: ${REDIS_PORT}
       GYMEESTI_API_BASE: ${GYMEESTI_API_BASE}
       GYMEESTI_WHITE_LABEL_ID: ${GYMEESTI_WHITE_LABEL_ID}
-      GYMEESTI_EMAIL: ${GYMEESTI_WHITE_LABEL_ID}
-      GYMEESTI_PASSWORD: ${GYMEESTI_WHITE_LABEL_ID
+      GYMEESTI_EMAIL: ${GYMEESTI_EMAIL}
+      GYMEESTI_PASSWORD: ${GYMEESTI_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.gymeesti-occupancy-api.rule=Host(`gymeesti-occupancy.wug.ge`) && PathPrefix(`/api`)"

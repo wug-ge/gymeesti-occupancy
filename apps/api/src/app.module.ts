@@ -6,6 +6,7 @@ import { CrawlerModule } from './crawler/crawler.module';
 import { BullModule } from '@nestjs/bullmq';
 import { ApiModule } from './api/api.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { OccupancyModule } from './occupancy/occupancy.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PrismaModule } from './prisma/prisma.module';
     CrawlerModule,
     ApiModule,
     PrismaModule,
+    OccupancyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

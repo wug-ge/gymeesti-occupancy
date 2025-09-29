@@ -11,5 +11,11 @@
     "url": "git+https://github.com/wug-ge/gymeesti-occupancy.git"
   },
   "license": "MIT",
-  "author": "Daniel Wuggenig"
+  "author": "Daniel Wuggenig",
+  "devDependencies": {
+    "@types/node": "^24.5.2"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.0.0"
+  }
 }

@@ -6,7 +6,6 @@
           v-for="club in clubs"
           :club="club" :title="club.name"
           class="col-span-6 md:col-span-3 lg:col-span-2 size-full min-h-[300px]"
-
         />
       </div>
     </ClientOnly>
@@ -14,6 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-const clubs = (await ((await fetch(`/api/occupancy`)).json() as any ));
+import type { Club } from '@gymeesti-occupancy/types';
+
+const res = await fetch(`/api/occupancy`)
+const clubs = await res.json() as Club[];
 
 </script>

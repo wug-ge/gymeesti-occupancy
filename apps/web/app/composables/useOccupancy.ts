@@ -1,13 +1,8 @@
-// composables/useOccupancy.ts
-export type OccupancyPoint = { id: number; clubId: number; count: number; createdAt: string }
-export type Club = {
-  id: number; clubId: number; name: string; occupancies: OccupancyPoint[];
-  // ...other fields ignored
-}
+import type { Club, OccupancyBasePoint } from "@gymeesti-occupancy/types"
 
 const toDate = (iso: string) => new Date(iso)
 
-export function sortByCreatedAt(pts: OccupancyPoint[]) {
+export function sortByCreatedAt(pts: OccupancyBasePoint[]) {
   return [...pts].sort((a, b) => toDate(a.createdAt).getTime() - toDate(b.createdAt).getTime())
 }
 
@@ -26,7 +21,7 @@ export function observedMax(club: Club) {
 }
 
 export function groupByDay(club: Club) {
-  const m = new Map<string, OccupancyPoint[]>()
+  const m = new Map<string, OccupancyBasePoint[]>()
   for (const p of club.occupancies) {
     const d = toDate(p.createdAt)
     const key = d.toISOString().slice(0, 10) // YYYY-MM-DD

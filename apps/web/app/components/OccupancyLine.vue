@@ -1,3 +1,7 @@
+<template>
+  <VChart :option="option" autoresize class="rounded-2xl" theme="dark" />
+</template>
+
 <script setup lang="ts">
 import { LineChart } from "echarts/charts";
 import { DataZoomComponent, GridComponent, TitleComponent, TooltipComponent } from "echarts/components";
@@ -56,7 +60,3 @@ const option = computed<EChartsOption>(() => ({
 }))
 
 </script>
-
-<template>
-  <VChart :option="option" autoresize class="rounded-2xl" theme="dark" />
-</template>

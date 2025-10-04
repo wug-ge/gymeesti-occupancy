@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "@gymeesti-occupancy/web",
   "type": "module",
   "private": true,
   "scripts": {
@@ -23,6 +23,7 @@
     "typescript": "^5.9.2",
     "vue": "^3.5.21",
     "vue-echarts": "^8.0.0",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "@gymeesti-occupancy/types": "0.0.1"
   }
 }

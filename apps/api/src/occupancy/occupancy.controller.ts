@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { OccupancyService } from './occupancy.service';
-import { Club } from 'generated/prisma';
+import { Club } from '@gymeesti-occupancy/types';
 
 @Controller('occupancy')
 export class OccupancyController {

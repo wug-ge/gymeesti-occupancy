@@ -6,6 +6,7 @@
   "bugs": {
     "url": "https://github.com/wug-ge/gymeesti-occupancy/issues"
   },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wug-ge/gymeesti-occupancy.git"
@@ -15,7 +16,5 @@
   "devDependencies": {
     "@types/node": "^24.5.2"
   },
-  "dependencies": {
-    "@nuxt/ui": "^4.0.0"
-  }
+  "workspaces": ["apps/", "types"]
 }

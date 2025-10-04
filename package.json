@@ -14,7 +14,11 @@
   "license": "MIT",
   "author": "Daniel Wuggenig",
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.68",
     "@types/node": "^24.5.2"
   },
-  "workspaces": ["apps/", "types"]
+  "workspaces": [
+    "apps/",
+    "types"
+  ]
 }

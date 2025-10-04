@@ -11,6 +11,13 @@ export default defineNuxtConfig({
     '@nuxt/ui'
   ],
 
+  colorMode: {
+    classSuffix: '',
+    preference: 'system',
+    fallback: 'light',
+    storageKey: 'nuxt-color-mode',
+  },
+
   css: ['~/assets/css/main.css'],
 
   build: {
@@ -20,6 +27,10 @@ export default defineNuxtConfig({
       "resize-detector", // needed for echarts, see https://github.com/nuxt/nuxt/issues/14553#issuecomment-1934042981,
       "tslib", // https://github.com/nuxt/nuxt/discussions/21533
     ],
+  },
+
+  icon: {
+    localApiEndpoint: "/_nuxt_icon",
   },
 
   routeRules: {

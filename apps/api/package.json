@@ -30,7 +30,7 @@
     "bullmq": "^5.58.8",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "@gymeesti-occupancy/types": "0.0.1"
+    "@gymeesti-occupancy/types": "file:../../types"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

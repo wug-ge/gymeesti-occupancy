@@ -1,8 +1,9 @@
 <template>
-  <VChart :option="option" autoresize theme="dark" class="rounded-2xl" />
+  <VChart :option="option" autoresize theme="dark" class="rounded-2xl !bg-[var(--ui-bg-accent-1)] pb-4 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 dark:shadow-none dark:hover:shadow-[0_0_16px_rgba(16,185,129,0.15)]" />
 </template>
 
 <script setup lang="ts">
+import { graphic } from "echarts";
 import { LineChart } from "echarts/charts";
 import { DataZoomComponent, GridComponent, TitleComponent, TooltipComponent } from "echarts/components";
 import { use } from "echarts/core";
@@ -25,11 +26,9 @@ type Club = Parameters<typeof timeseries>[0]
 const props = withDefaults(defineProps<{
   club: Club
   title?: string
-  area?: boolean
   capacity?: number // optional, if omitted we use observed max
   smooth?: boolean
 }>(), {
-  area: true,
   smooth: true,
 })
 
@@ -39,12 +38,18 @@ const maxY = computed(() => Math.max(props.capacity ?? observedMax(props.club), 
 const primaryColor = ref<string>('');
 const backgroundAccent1 = ref<string>('');
 const textColor = ref<string>('');
+const chartGridColor = ref<string>('');
+const badgeBackgroundColor = ref<string>('')
+const badgeTextColor = ref<string>('')
 
 const getColorsFromCssVariables = () => {
   const style = getComputedStyle(document.documentElement)
   primaryColor.value = style.getPropertyValue('--ui-primary').trim()
   backgroundAccent1.value = style.getPropertyValue('--ui-bg-accent-1').trim()
   textColor.value = style.getPropertyValue('--ui-neutral').trim()
+  chartGridColor.value = style.getPropertyValue('--chart-grid').trim()
+  badgeBackgroundColor.value = style.getPropertyValue('--badge-bg').trim()
+  badgeTextColor.value = style.getPropertyValue('--badge-text').trim()
 }
 const colorMode = useColorMode();
 watch(() => colorMode.preference, getColorsFromCssVariables);
@@ -63,16 +68,17 @@ const option = computed<EChartsOption>(() => ({
     textStyle: {
       color: textColor.value,
       rich: {
-        // t: { fontWeight: 600, fontSize: 14 },
+        t: { fontWeight: 600, fontSize: 14, color: textColor.value },
         b: {
           padding: [2, 6],
           borderRadius: 999,
           borderWidth: 1,
           borderColor: '#10B981',
-          backgroundColor: '#10B981',
-          color: '#F8FAFC',
+          backgroundColor: badgeBackgroundColor.value,
+          color: badgeTextColor.value,
           fontSize: 12,
-          align: 'middle'
+          verticalAlign: 'middle',
+          align: 'center',
         }
       }
     }
@@ -92,7 +98,7 @@ const option = computed<EChartsOption>(() => ({
     axisLabel: { color: textColor.value },
     splitLine: {
       lineStyle: {
-        color: textColor.value,
+        color: chartGridColor.value,
       }
     },
   },
@@ -103,10 +109,15 @@ const option = computed<EChartsOption>(() => ({
     smooth: props.smooth,
     showSymbol: false,
     lineStyle: { width: 3 },
-    areaStyle: props.area ? { opacity: 0.6 } : undefined,
+    areaStyle: {
+      color: new graphic.LinearGradient(0, 0, 0, 1, [
+    { offset: 0, color: 'rgba(16,185,129,0.78)' }, // top
+    { offset: 1, color: 'rgba(16,185,129,0.0)' }  // bottom
+  ])
+    },
     data: data.value, // [Date, number]
     animationDuration: 600,
-    itemStyle: { color: primaryColor.value }
+    itemStyle: { color: primaryColor.value },
   }],
   backgroundColor: backgroundAccent1.value,
 }))

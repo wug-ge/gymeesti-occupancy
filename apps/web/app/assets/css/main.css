@@ -10,34 +10,33 @@
 
   /* Primary & secondary brand colors (kept the same for consistency) */
   --ui-primary: #10B981;     /* emerald green */
-  --ui-secondary: #06B6D4;   /* cyan */
 
   /* Neutral text and surfaces */
-  --ui-neutral: #0F172A;     /* dark neutral text */
+  --ui-neutral:  #111827;     /* dark neutral text */
 
-  /* Accent colors */
-  --color-accent-1: #ff0;    /* yellow highlight */
-  --color-accent-2: #000;    /* black accent */
+  --badge-bg: #10B981;        /* deep green for “Now” badge */
+  --badge-text: #FFFFFF;      /* light minty text */
+  --chart-grid: rgba(0,0,0,0.05);
 
-  /* Text contrast levels */
-  --color-low: #64748B;      /* muted gray for secondary text */
-  --color-medium: #334155;   /* medium contrast text */
-  --color-high: #0F172A;     /* main text color */
   }
 }
 
 .dark {
-  --ui-bg: #0F172A;
-  --ui-bg-accent-1: #1E293B;
+  /* Backgrounds */
+  --ui-bg: #0F172A;           /* dark navy background */
+  --ui-bg-accent-1: #1E293B;  /* slightly lighter card background */
 
-  --ui-primary: #10B981;
-  --ui-secondary: #06B6D4;
-  --ui-neutral: #F8FAFC;
+  /* Chart area & line */
+  --ui-primary: #34D399;      /* soft emerald green */
 
-  --color-accent-1: #ff0;
-  --color-accent-2: #000;
+  /* Text */
+  --ui-neutral: #E2E8F0;         /* soft white text */
 
-  --color-low: #000;
-  --color-medium: #000;
-  --color-high: #000;
+  /* Grid lines */
+  --chart-grid: rgba(148, 163, 184, 0.15); /* subtle grid, not distracting */
+
+  /* Accent badge */
+  --badge-bg: #059669;        /* deep green for “Now” badge */
+  --badge-text: #E0F2F1;      /* light minty text */
+
 }

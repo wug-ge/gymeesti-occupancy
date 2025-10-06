@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { OccupancyService } from './occupancy.service';
 import { Club } from '@gymeesti-occupancy/types';
 
@@ -8,7 +8,7 @@ export class OccupancyController {
   }
 
   @Get()
-  async getOccupancy(): Promise<Club[]> {
-    return await this.occupancyService.getOccupancy();
+  async getOccupancy(@Query('range') range: string): Promise<Club[]> {
+    return await this.occupancyService.getOccupancy(range);
   }
 }

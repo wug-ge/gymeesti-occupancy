@@ -4,20 +4,24 @@
 
 .light {
   @theme {
-  /* Backgrounds (light instead of dark) */
-  --ui-bg: #F8FAFC;          /* light background */
-  --ui-bg-accent-1: #E2E8F0; /* slightly darker background accent */
+    /* Backgrounds (light instead of dark) */
+    --ui-bg: #F8FAFC;          /* light background */
+    --ui-bg-accent-1: #E2E8F0; /* slightly darker background accent */
 
-  /* Primary & secondary brand colors (kept the same for consistency) */
-  --ui-primary: #10B981;     /* emerald green */
+    /* Primary & secondary brand colors (kept the same for consistency) */
+    --ui-primary: #10B981;     /* emerald green */
 
-  /* Neutral text and surfaces */
-  --ui-neutral:  #111827;     /* dark neutral text */
+    /* Neutral text and surfaces */
+    --ui-neutral:  #111827;     /* dark neutral text */
 
-  --badge-bg: #10B981;        /* deep green for “Now” badge */
-  --badge-text: #FFFFFF;      /* light minty text */
-  --chart-grid: rgba(0,0,0,0.05);
+    --badge-bg: #10B981;        /* deep green for “Now” badge */
+    --badge-text: #FFFFFF;      /* light minty text */
+    --chart-grid: rgba(0,0,0,0.05);
 
+
+    --badge-bg-good: #34D399;
+    --badge-bg-warning: #FDBA74;
+    --badge-bg-error: #F87171;
   }
 }
 
@@ -38,5 +42,9 @@
   /* Accent badge */
   --badge-bg: #059669;        /* deep green for “Now” badge */
   --badge-text: #E0F2F1;      /* light minty text */
+
+  --badge-bg-good: #059669;
+  --badge-bg-warning: #D57E00;
+  --badge-bg-error: #DC2626;
 
 }

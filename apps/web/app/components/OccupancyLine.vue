@@ -39,8 +39,11 @@ const primaryColor = ref<string>('');
 const backgroundAccent1 = ref<string>('');
 const textColor = ref<string>('');
 const chartGridColor = ref<string>('');
-const badgeBackgroundColor = ref<string>('')
 const badgeTextColor = ref<string>('')
+const badgeBackgroundColorGood = ref<string>('')
+const badgeBackgroundColorWarning = ref<string>('')
+const badgeBackgroundColorError = ref<string>('')
+
 
 const getColorsFromCssVariables = () => {
   const style = getComputedStyle(document.documentElement)
@@ -48,8 +51,11 @@ const getColorsFromCssVariables = () => {
   backgroundAccent1.value = style.getPropertyValue('--ui-bg-accent-1').trim()
   textColor.value = style.getPropertyValue('--ui-neutral').trim()
   chartGridColor.value = style.getPropertyValue('--chart-grid').trim()
-  badgeBackgroundColor.value = style.getPropertyValue('--badge-bg').trim()
   badgeTextColor.value = style.getPropertyValue('--badge-text').trim()
+  badgeBackgroundColorGood.value = style.getPropertyValue('--badge-bg-good').trim()
+  badgeBackgroundColorWarning.value = style.getPropertyValue('--badge-bg-warning').trim()
+  badgeBackgroundColorError.value = style.getPropertyValue('--badge-bg-error').trim()
+
 }
 const colorMode = useColorMode();
 watch(() => colorMode.preference, getColorsFromCssVariables);
@@ -58,7 +64,35 @@ onMounted(() => {
  getColorsFromCssVariables()  
 })
 
+const clubState = computed(() => {
+  const maxOccupancyCount = Math.max(...props.club.occupancies.map(o => o.count));
+  const currentOccupancyCount = props.club.occupancies[props.club.occupancies.length - 1]?.count
 
+  if (!maxOccupancyCount || !currentOccupancyCount) {
+    return 'error'
+  }
+
+  if (currentOccupancyCount / maxOccupancyCount <= 0.35) {
+    return 'good'
+  }
+
+  if (currentOccupancyCount / maxOccupancyCount <= 0.6) {
+    return 'warning'
+  }
+
+  return 'error'
+})
+
+const badgeBackgroundColor = computed(() => {
+  switch(clubState.value) {
+    case 'good': 
+      return badgeBackgroundColorGood.value
+    case 'warning':
+      return badgeBackgroundColorWarning.value
+    case 'error':
+      return badgeBackgroundColorError.value
+  }
+})
 
 const option = computed<EChartsOption>(() => ({
   title: { 
@@ -73,7 +107,7 @@ const option = computed<EChartsOption>(() => ({
           padding: [2, 6],
           borderRadius: 999,
           borderWidth: 1,
-          borderColor: '#10B981',
+          // borderColor: '#10B981',
           backgroundColor: badgeBackgroundColor.value,
           color: badgeTextColor.value,
           fontSize: 12,
@@ -88,7 +122,10 @@ const option = computed<EChartsOption>(() => ({
   xAxis: {
     type: 'time',
     axisLabel: { 
-      formatter: (v: number) => new Date(v).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' },),
+      formatter: (v: number) =>   new Date(v).toLocaleDateString([], {
+        day: '2-digit',
+        month: 'short',
+      }),
       color: textColor.value,
     },
   },
@@ -119,6 +156,16 @@ const option = computed<EChartsOption>(() => ({
     animationDuration: 600,
     itemStyle: { color: primaryColor.value },
   }],
+    visualMap: {
+      show: false,
+      pieces: [
+        { gt: 0, lte: maxY.value * 0.35, color: badgeBackgroundColorGood.value },
+        { gt: maxY.value * 0.35, lte: maxY.value * 0.6, color: badgeBackgroundColorWarning.value },
+        { gt: maxY.value * 0.6, color: badgeBackgroundColorError.value }
+      ],
+      dimension: 1, // y-axis value
+      outOfRange: { color: '#94A3B8' } // fallback gray
+    },
   backgroundColor: backgroundAccent1.value,
 }))
 

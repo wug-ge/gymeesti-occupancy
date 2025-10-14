@@ -8,6 +8,7 @@ services:
       - 3000
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik_default"
       - "traefik.http.routers.gymeesti-occupancy-web.rule=Host(`gymeesti-occupancy.wug.ge`)"
       - "traefik.http.services.gymeesti-occupancy-web.loadbalancer.server.port=3000"
       - "traefik.http.routers.gymeesti-occupancy-web.tls=true"
@@ -30,6 +31,7 @@ services:
       GYMEESTI_PASSWORD: ${GYMEESTI_PASSWORD}
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik_default"
       - "traefik.http.routers.gymeesti-occupancy-api.rule=Host(`gymeesti-occupancy.wug.ge`) && PathPrefix(`/api`)"
       - "traefik.http.services.gymeesti-occupancy-api.loadbalancer.server.port=3000"
       - "traefik.http.routers.gymeesti-occupancy-api.middlewares=gymeesti-occupancy-api"

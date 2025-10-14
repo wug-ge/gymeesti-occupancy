@@ -35,7 +35,7 @@ steps:
 
 
 - name: deploy
-  image: docker/compose
+  image: docker:28-cli
   when:
     branch:
       - main
@@ -71,7 +71,7 @@ steps:
       from_secret: GYMEESTI_PASSWORD
   commands:
   - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
-  - docker-compose -f docker-compose.prod.yml down && docker-compose -f docker-compose.prod.yml pull && docker-compose -f docker-compose.prod.yml up -d
+  - docker compose -f docker-compose.prod.yml down && docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compose.prod.yml up -d
   depends_on:
     - publish_api
     - publish_web

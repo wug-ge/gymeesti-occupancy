@@ -12,9 +12,11 @@ services:
       - "traefik.http.services.gymeesti-occupancy-web.loadbalancer.server.port=3000"
       - "traefik.http.routers.gymeesti-occupancy-web.tls=true"
       - "traefik.http.routers.gymeesti-occupancy-web.entrypoints=websecure"
+    networks:
+      - internal
+      - traefik
   api:
     image: wugge/gymeesti-occupancy-api:latest
-    container_name: gymeesti-occupancy-api
     restart: "unless-stopped"
     expose:
       - 3000
@@ -35,6 +37,9 @@ services:
       - "traefik.http.middlewares.gymeesti-occupancy-api.replacepathregex.replacement=/$$1"
       - "traefik.http.routers.gymeesti-occupancy-api.tls=true"
       - "traefik.http.routers.gymeesti-occupancy-api.entrypoints=websecure"
+    networks:
+      - internal
+      - traefik
   gymeesti-occupancy-db:
     image: postgres:17
     ports:
@@ -45,16 +50,18 @@ services:
       POSTGRES_DB: default
     volumes:
       - gymeesti-occupancy_db_volume:/var/lib/postgresql/data
+    networks:
+      - internal
   redis:
     image: redis:8.2
-    
-
+    networks:
+      - internal
 
 volumes:
   gymeesti-occupancy_db_volume:
 
 networks:
-  default:
-    external:
-      name:
-        traefik_default
+  internal: {}
+  traefik:
+    external: true
+    name: traefik_default

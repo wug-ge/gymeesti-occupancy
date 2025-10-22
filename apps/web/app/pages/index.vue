@@ -6,6 +6,7 @@
     <ClientOnly>
       <div class="grid grid-cols-6 gap-4 mt-16">
         <div class="col-span-6">
+          <span class="opacity-70">Last refresh: {{ refreshDate.toLocaleTimeString() }}</span>
           <USelect class="min-w-32 float-right" v-model="chosenDateRange" :items="dateRangeOptions" />          
         </div>
 
@@ -29,8 +30,14 @@ const dateRangeOptions = [
 
 const chosenDateRange = ref('last_week');
 
-const { data: clubs } = await useFetch(`/api/occupancy`, {
+const { data: clubs, refresh } = await useFetch(`/api/occupancy`, {
   query: {
     range: chosenDateRange,
 }});
+
+const refreshDate = ref(new Date());
+setInterval(async () => {
+  await refresh();
+  refreshDate.value = new Date();
+}, 60000); // refresh every minute
 </script>

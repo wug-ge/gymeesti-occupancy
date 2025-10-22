@@ -68,7 +68,7 @@ const clubState = computed(() => {
   const maxOccupancyCount = Math.max(...props.club.occupancies.map(o => o.count));
   const currentOccupancyCount = props.club.occupancies[props.club.occupancies.length - 1]?.count
 
-  if (!maxOccupancyCount || !currentOccupancyCount) {
+  if (!maxOccupancyCount || (!currentOccupancyCount && currentOccupancyCount !== 0)) {
     return 'error'
   }
 

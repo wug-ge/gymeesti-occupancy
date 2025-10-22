@@ -20,11 +20,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { Club } from '@gymeesti-occupancy/types';
-
 const dateRangeOptions = [
   { label: 'Last Day', value: 'last_day' },
   { label: 'Last Week', value: 'last_week' },
+  { label: 'Last 2 Weeks', value: 'last_two_weeks' },
   { label: 'All time', value: 'all_time' },
 ]
 

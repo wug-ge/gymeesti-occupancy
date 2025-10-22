@@ -11,6 +11,8 @@ export class OccupancyService {
       return this.getLastDaysOccupancies(7)
     } else if (range === 'last_day') {
       return this.getLastDaysOccupancies(1)
+    } else if (range === 'last_two_weeks') {
+      return this.getLastDaysOccupancies(14)
     }
     return this.getAllTimeOccupancies()
   }

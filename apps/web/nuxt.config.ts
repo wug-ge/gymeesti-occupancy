@@ -26,13 +26,12 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [
-    '@nuxt/eslint',
-    '@nuxt/image',
-    '@nuxt/scripts',
-    '@nuxt/test-utils',
-    '@nuxt/ui'
-  ],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', '@nuxt/test-utils', '@nuxt/ui', '@kgierke/nuxt-matomo'],
+
+  matomo: {
+    host: 'https://matomo.wug.ge/',
+    siteId: 2,
+  },
 
   colorMode: {
     classSuffix: '',

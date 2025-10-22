@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@googlemaps/markerclusterer": "^2.6.2",
+    "@gymeesti-occupancy/types": "file:../../types",
+    "@kgierke/nuxt-matomo": "^0.0.3",
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/image": "^1.11.0",
     "@nuxt/scripts": "^0.12.1",
@@ -23,7 +25,6 @@
     "typescript": "^5.9.2",
     "vue": "^3.5.21",
     "vue-echarts": "^8.0.0",
-    "vue-router": "^4.5.1",
-    "@gymeesti-occupancy/types": "file:../../types"
+    "vue-router": "^4.5.1"
   }
 }

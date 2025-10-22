@@ -1,6 +1,7 @@
 <template>
+  <JobAlert />
   <UContainer>
-    <div class="absolute right-8 top-8 flex items-center">
+    <div class="absolute right-8 top-12 flex items-center">
       <UColorModeSwitch />
     </div>
     <ClientOnly>
@@ -18,6 +19,7 @@
       </div>
     </ClientOnly>
   </UContainer>
+  <FooterBar />
 </template>
 
 <script lang="ts" setup>

@@ -5,17 +5,25 @@
       <UColorModeSwitch />
     </div>
     <ClientOnly>
-      <div class="grid grid-cols-6 gap-4 mt-16">
-        <div class="col-span-6">
-          <span class="opacity-70">Last refresh: {{ refreshDate.toLocaleTimeString() }}</span>
-          <USelect class="min-w-32 float-right" v-model="chosenDateRange" :items="dateRangeOptions" />          
-        </div>
+      <div class="mt-16">
+        <span class="opacity-70">Last refresh: {{ refreshDate.toLocaleTimeString() }}</span>
+        <USelect class="min-w-32 float-right" v-model="chosenDateRange" :items="dateRangeOptions" />          
 
-        <OccupancyLine
-          v-for="club in clubs"
-          :club="club"
-          class="col-span-6 md:col-span-3 lg:col-span-2 size-full min-h-[300px]"
-        />
+
+        <div
+          class="w-full my-2"
+          v-for="(cityClubs, city) in clubsByCity"
+        >
+          <div class="text-xl font-bold">{{ city }}</div>
+          <div class="grid grid-cols-6 gap-4 ">
+            <OccupancyLine
+              v-for="cityClub in cityClubs"
+              :club="cityClub"
+              class="col-span-6 md:col-span-3 lg:col-span-2 size-full min-h-[300px]"
+            />
+          </div>
+        </div>
+        
       </div>
     </ClientOnly>
   </UContainer>
@@ -36,6 +44,17 @@ const { data: clubs, refresh } = await useFetch(`/api/occupancy`, {
   query: {
     range: chosenDateRange,
 }});
+
+const clubsByCity = computed(() => {
+  const grouped: Record<string, any[]> = {};
+  (clubs.value || []).forEach(club => {
+    if (!grouped[club.address.city]) {
+      grouped[club.address.city] = [];
+    }
+    grouped[club.address.city].push(club);
+  });
+  return grouped;
+});
 
 const refreshDate = ref(new Date());
 setInterval(async () => {

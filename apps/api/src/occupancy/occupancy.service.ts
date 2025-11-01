@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { Club, OccupancyBasePoint } from '@gymeesti-occupancy/types';
+import { Address } from 'generated/prisma';
 
 @Injectable()
 export class OccupancyService {
@@ -31,6 +32,7 @@ export class OccupancyService {
         latitude: true,
         isHidden: true,
         qrCodeSuffixConfig: true,
+        address: true,
         occupancies: {
           select: {
             count: true,
@@ -80,6 +82,10 @@ export class OccupancyService {
       description: string;
       isHidden: boolean;
       qrCodeSuffixConfig: string | null;
+      line1: string | null;
+      city: string | null;
+      postalCode: string | null;
+      country: string | null;
       bucketStart: Date;
       createdAt: Date;
       avgCount: number;
@@ -89,16 +95,19 @@ export class OccupancyService {
       c."clubId",
       c."name",
       c."description",
+      a.*,
       date_bin(make_interval(secs => ${bucketSec}), co."createdAt", '1970-01-01'::timestamp) AS "bucketStart",
       AVG(co."count") AS "avgCount"
-        FROM "ClubOccupancy" co
-        JOIN "Club" c ON c."clubId" = co."clubId"
-        WHERE c."isHidden" = false
-        GROUP BY
-          c.id, c."clubId", c."name", c."description", c."longitude",
-          "bucketStart"
-        ORDER BY c."clubId", "bucketStart"
+      FROM "ClubOccupancy" co
+      JOIN "Club" c ON c."clubId" = co."clubId"
+      LEFT JOIN "Address" a ON a."clubId" = c."id"
+      WHERE c."isHidden" = false
+      GROUP BY
+        c.id, c."clubId", c."name", c."description", c."longitude",
+        "bucketStart", a.id, a."line1", a."line2", a."city", a."postalCode", a."country"
+      ORDER BY c."clubId", "bucketStart"
     `;
+
 
     const clubs: Club[] = [];
     let current: Club | null = null;
@@ -110,6 +119,7 @@ export class OccupancyService {
           id: row.id,
           clubId: row.clubId,
           name: row.name,
+          address: { city: row.city, country: row.country, line1: row.line1, postalCode: row.postalCode },
           occupancies: [],
         };
       }

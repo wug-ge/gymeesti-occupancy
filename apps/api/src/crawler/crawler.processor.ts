@@ -31,10 +31,27 @@ export class CrawlerProcessor extends WorkerHost {
     const clubs = await this.client.getClubs()
     const whoIsInCount = await this.client.getWhoIsInCount()
 
+
     await Promise.all(clubs.map((async club => {
       await this.prisma.club.upsert({ 
         where: { clubId: club.id },
-        update: {},
+        update: {
+          name: club.name,
+          description: club.description,
+          longitude: club.longitude,
+          latitude: club.latitude,
+          isHidden: club.isHidden,
+          qrCodeSuffixConfig: club.qrCodeSuffixConfig,
+          address: {
+            update: {
+              country: club.address?.country || '',
+              city: club.address?.city || '',
+              postalCode: club.address?.postalCode || null,
+              line1: club.address?.line1 || '',
+              line2: club.address?.line2 || null,
+            },
+          },
+        },
         create: {
           clubId: club.id,
           name: club.name,

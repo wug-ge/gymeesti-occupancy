@@ -48,12 +48,21 @@ const { data: clubs, refresh } = await useFetch(`/api/occupancy`, {
 const clubsByCity = computed(() => {
   const grouped: Record<string, any[]> = {};
   (clubs.value || []).forEach(club => {
-    if (!grouped[club.address.city]) {
-      grouped[club.address.city] = [];
+    const city = club?.address?.city || 'Unknown';
+    if (!grouped[city]) {
+      grouped[city] = [];
     }
-    grouped[club.address.city].push(club);
+    grouped[city].push(club);
   });
-  return grouped;
+
+  const ordered: Record<string, any[]> = {};
+  Object.entries(grouped)
+    .sort((a, b) => b[1].length - a[1].length) // sort by number of entries desc
+    .forEach(([city, list]) => {
+      ordered[city] = list;
+    });
+
+  return ordered;
 });
 
 const refreshDate = ref(new Date());

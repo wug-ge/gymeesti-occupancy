@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { Club, OccupancyBasePoint } from '@gymeesti-occupancy/types';
-import { Address } from 'generated/prisma';
+import { createClient } from 'redis';
 
 @Injectable()
 export class OccupancyService {
@@ -131,5 +131,18 @@ export class OccupancyService {
     if (current) clubs.push(current);
 
     return clubs;
+  }
+
+  async warmUpCache(redis: ReturnType<typeof createClient>) {
+    const ranges = ['last_day', 'last_two_weeks', 'last_week', 'all_time'];
+
+    for (const range of ranges) {
+      const key = `/occupancy?range=${range}`;
+      const exists = await redis.exists(key);
+      if (!exists) {
+        const data = await this.getOccupancy(range);
+        await redis.set(key, JSON.stringify({ value: data }), { PX: 600000 }); // 10 minutes TTL
+      }
+    }
   }
 }

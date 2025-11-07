@@ -2,8 +2,11 @@ import { Processor, WorkerHost, OnWorkerEvent } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { CRAWL_QUEUE } from './crawler.constants';
 import { ApiClientService } from 'src/api/api-client.service';
-import { PrismaClient } from 'generated/prisma';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Inject } from '@nestjs/common';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { createClient } from 'redis';
+import { OccupancyService } from 'src/occupancy/occupancy.service';
 
 @Processor(CRAWL_QUEUE, {
   concurrency: 8, // run up to 8 jobs in parallel
@@ -12,6 +15,8 @@ export class CrawlerProcessor extends WorkerHost {
   constructor(
     private readonly client: ApiClientService,
     private readonly prisma: PrismaService,
+    private readonly occupancyService: OccupancyService,
+    @Inject(CACHE_MANAGER) private cache: Cache,
   ) {
     super()
   }
@@ -82,10 +87,27 @@ export class CrawlerProcessor extends WorkerHost {
       })
     }))
 
+    this.resetKeys()
+
     return { clubsFound: clubs.length, whoIsInCountFound: whoIsInCount.length };
   }
 
+  /**
+   * Reset all occupancy cache keys in Redis
+   */
+  async resetKeys() {
+    const redis = createClient({ url: `redis://${process.env.REDIS_HOST || 'localhost' }:${process.env.REDIS_PORT || '6379'}` });
+    await redis.connect();
+    const keys = await redis.keys('/occupancy*');
 
+    for (const key of keys) {
+      await redis.del(key);
+    }
+
+    await this.occupancyService.warmUpCache(redis);
+
+    await redis.quit();
+  }
 
   @OnWorkerEvent('active')
   onActive(job: Job) {

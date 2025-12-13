@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-    app: {
+  app: {
     head: {
       title: 'GymEesti Occupancy Tracker — Live Gym Busyness in Estonia',
       meta: [
@@ -26,7 +26,34 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', '@nuxt/test-utils', '@nuxt/ui', '@kgierke/nuxt-matomo'],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', '@nuxt/test-utils', '@nuxt/ui', '@kgierke/nuxt-matomo', '@weareheavy/nuxt-cookie-consent',],
+
+  plugins: [
+    '~/plugins/posthog.client.ts',
+  ],
+
+
+  cookieConsent: {
+    provider: 'cookiescript',
+    id: '609880b102f93c894ec1d1b3543f04ab',
+    cookieName: 'cookie_consent',
+
+    dev: true,
+    init: true,
+    categories: {
+      necessary: {
+        enabled: true,
+        readOnly: true
+      },
+      analytics: {
+        enabled: false
+      }
+    },
+
+    // optional but recommended
+    showBanner: true,
+    showDeclineButton: true
+  },
 
   matomo: {
     host: 'https://matomo.wug.ge/',
@@ -41,6 +68,14 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
+
+  runtimeConfig: {
+    public: {
+      posthogPublicKey: 'phc_vBVCiZIOGwtxjuic6gYHMBw9PU6bYWHJBpX7utqegqr',
+      posthogHost: 'https://eu.i.posthog.com',
+      posthogDefaults: '2025-11-30'
+    }
+  },
 
   build: {
     transpile: [

@@ -1,9 +1,7 @@
 <template>
   <div>
-    <ClientOnly>
-      <UApp>
-        <NuxtPage />
-      </UApp>
-    </ClientOnly>
+    <UApp>
+      <NuxtPage />
+    </UApp>
   </div>
 </template>

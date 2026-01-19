@@ -53,12 +53,16 @@ const { data: clubs, refresh } = await useFetch(`/api/occupancy`, {
 
 const clubsByCity = computed(() => {
   const grouped: Record<string, any[]> = {};
-  (clubs.value || []).forEach(club => {
-    const city = club?.address?.city || 'Unknown';
-    if (!grouped[city]) {
-      grouped[city] = [];
-    }
-    grouped[city].push(club);
+  (clubs.value || [])
+    .filter((club) => {
+      return (club.occupancies.find(clubOccupancy => clubOccupancy.count))
+    })
+    .forEach(club => {
+      const city = club?.address?.city || 'Unknown';
+      if (!grouped[city]) {
+        grouped[city] = [];
+      }
+      grouped[city].push(club);
   });
 
   const ordered: Record<string, any[]> = {};

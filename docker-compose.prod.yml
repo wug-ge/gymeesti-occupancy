@@ -66,4 +66,4 @@ networks:
   internal: {}
   traefik:
     external: true
-    name: traefik_default
+    name: traefik_proxy

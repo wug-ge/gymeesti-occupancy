@@ -54,9 +54,13 @@ export class OccupancyService {
   }
 
   /**
-   * Counts back from the newest recorded point rather than from today, because
+   * Counts back from the newest real reading rather than from today, because
    * collection stopped when GymEesti retired the API: a window anchored to the
    * current date would return an empty archive.
+   *
+   * The window is closed at both ends. The crawl kept recording zeroes long
+   * after the API stopped reporting anyone, so an open-ended window would drag
+   * that flat tail in and bury the actual week of data.
    */
   private async getLastDaysOccupancies(days: number): Promise<Club[]> {
     const lastRecordedAt = await this.getRecordedBound('desc');
@@ -82,7 +86,7 @@ export class OccupancyService {
             createdAt: true,
           },
           orderBy: { createdAt: 'asc' },
-          where: { createdAt: { gte: nDaysAgo }}
+          where: { createdAt: { gte: nDaysAgo, lte: lastRecordedAt }}
         },
       },
       where: {

@@ -2,6 +2,19 @@ import type { Club, OccupancyBasePoint } from "@gymeesti-occupancy/types"
 
 const toDate = (iso: string) => new Date(iso)
 
+/**
+ * Pinned to a fixed locale and the gyms' own timezone, so the server and the
+ * client always render the same string and hydration stays quiet.
+ */
+export function formatArchiveDate(iso: string) {
+  return toDate(iso).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Europe/Tallinn',
+  })
+}
+
 export function sortByCreatedAt(pts: OccupancyBasePoint[]) {
   return [...pts].sort((a, b) => toDate(a.createdAt).getTime() - toDate(b.createdAt).getTime())
 }

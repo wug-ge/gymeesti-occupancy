@@ -2,10 +2,10 @@
   <JobAlert />
   <main>
     <section class="sr-only" aria-hidden="true">
-      <h1>GymEesti Occupancy Tracker</h1>
-      <p>Live gym occupancy levels across Estonia, including Tallinn. Check how busy your gym is right now and find
-        quieter times to train.</p>
-      <h2>Supported gyms</h2>
+      <h1>GymEesti Occupancy Tracker: Archive</h1>
+      <p>An archive of gym occupancy levels across Estonia, including Tallinn, recorded while the GymEesti API was
+        available. No longer updating: GymEesti retired the API this tracker was built on.</p>
+      <h2>Gyms in the archive</h2>
       <ul>
         <li v-for="club in clubs">GymEesti {{ club.name }}</li>
       </ul>
@@ -14,9 +14,10 @@
       <div class="absolute right-8 top-12 flex items-center">
         <UColorModeSwitch />
       </div>
+      <ArchiveNotice :last-recorded-at="archive?.lastRecordedAt" />
       <ClientOnly>
-        <div class="mt-16">
-          <span class="opacity-70">Last refresh: {{ refreshDate.toLocaleTimeString() }}</span>
+        <div class="mt-8">
+          <span class="opacity-70">{{ archiveRange }}</span>
           <USelect class="min-w-32 float-right" v-model="chosenDateRange" :items="dateRangeOptions" />
 
 
@@ -36,19 +37,28 @@
 </template>
 
 <script lang="ts" setup>
+// Windows count back from the last recorded point, not from today, so they keep
+// framing the end of the archive rather than an empty stretch of the present.
 const dateRangeOptions = [
-  { label: 'Last Day', value: 'last_day' },
-  { label: 'Last Week', value: 'last_week' },
-  { label: 'Last 2 Weeks', value: 'last_two_weeks' },
+  { label: 'Final day', value: 'last_day' },
+  { label: 'Final week', value: 'last_week' },
+  { label: 'Final 2 weeks', value: 'last_two_weeks' },
   { label: 'All time', value: 'all_time' },
 ]
 
 const chosenDateRange = ref('last_week');
 
-const { data: clubs, refresh } = await useFetch(`/api/occupancy`, {
+const { data: clubs } = await useFetch(`/api/occupancy`, {
   query: {
     range: chosenDateRange,
   }
+});
+
+const { data: archive } = await useFetch(`/api/occupancy/archive`);
+
+const archiveRange = computed(() => {
+  if (!archive.value?.firstRecordedAt || !archive.value?.lastRecordedAt) return '';
+  return `Recorded ${formatArchiveDate(archive.value.firstRecordedAt)} – ${formatArchiveDate(archive.value.lastRecordedAt)}`;
 });
 
 const clubsByCity = computed(() => {
@@ -74,10 +84,4 @@ const clubsByCity = computed(() => {
 
   return ordered;
 });
-
-const refreshDate = ref(new Date());
-setInterval(async () => {
-  await refresh();
-  refreshDate.value = new Date();
-}, 60000); // refresh every minute
 </script>

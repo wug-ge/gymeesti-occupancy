@@ -98,7 +98,7 @@ const option = computed<EChartsOption>(() => ({
   title: { 
     left: 'center',
     top: 6,
-    text: `{t|${props.club.name}}  {b|Now ${props.club.occupancies[props.club.occupancies.length - 1]?.count}}`, // ← two rich fragments
+    text: `{t|${props.club.name}}  {b|Last ${props.club.occupancies[props.club.occupancies.length - 1]?.count}}`, // ← two rich fragments
     textStyle: {
       color: textColor.value,
       rich: {

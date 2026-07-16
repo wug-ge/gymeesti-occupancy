@@ -5,17 +5,17 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'GymEesti Occupancy Tracker — Live Gym Busyness in Estonia',
+      title: 'GymEesti Occupancy Tracker: Archived Gym Busyness in Estonia',
       meta: [
-        { name: 'description', content: 'Check live GymEesti gym occupancy levels across Estonia. Avoid crowded gyms and plan your workout with real-time busyness data.' },
-        { name: 'keywords', content: 'GymEesti, gym occupancy, Estonia gyms, gym tracker, Tallinn gyms, fitness tracker, real-time gym data' },
+        { name: 'description', content: 'An archive of GymEesti gym occupancy across Estonia, recorded until GymEesti retired the API this tracker was built on. No longer updating.' },
+        { name: 'keywords', content: 'GymEesti, gym occupancy, Estonia gyms, gym tracker, Tallinn gyms, fitness tracker, gym occupancy archive' },
         { name: 'author', content: 'Wugge' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'theme-color', content: '#10B981' },
 
         // Open Graph (for social sharing)
-        { property: 'og:title', content: 'GymEesti Occupancy Tracker' },
-        { property: 'og:description', content: 'See how busy GymEesti gyms are in real time and plan your workouts smartly.' },
+        { property: 'og:title', content: 'GymEesti Occupancy Tracker: Archive' },
+        { property: 'og:description', content: 'An archive of how busy GymEesti gyms were, recorded until the API it was built on was retired.' },
         { property: 'og:type', content: 'website' },
         { property: 'og:url', content: 'https://gymeesti-occupancy.wug.ge/' },
         { property: 'og:image', content: 'https://gymeesti-occupancy.wug.ge/og-image.png' },
